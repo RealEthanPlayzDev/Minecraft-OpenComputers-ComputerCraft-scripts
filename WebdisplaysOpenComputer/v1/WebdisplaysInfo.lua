@@ -23,7 +23,7 @@ end
 
 function interface_event(_, _, _, port, _, newDataSerialized)
     clear()
-    local receivedData; print(pcall(function() receivedData = serialization.unserialize(newDataSerialized) end))
+    local receivedData; pcall(function() receivedData = serialization.unserialize(newDataSerialized) end)
     if type(receivedData) ~= "table" or port ~= InfoServerPort then return end
     print([[
 WebdisplayInfo - v1
@@ -32,6 +32,8 @@ end
 
 event.listen("interrupted", function() modem.close(InfoServerPort) event.ignore("modem_message", interface_event) end)
 modem.open(InfoServerPort)
+clear()
+print("Connecting to InfoServer...")
 event.listen("modem_message", interface_event)
 
 while true do wait(1) end
